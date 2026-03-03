@@ -2,7 +2,7 @@
   "name": "api-gerenciamento-de-habitos",
   "version": "1.0.0",
   "description": "📘 README — API de Gerenciamento de Hábitos\r 📌 Descrição",
-  "main": "index.js",
+  "main": "server.js",
   "type": "commonjs",
   "scripts": {
     "dev": "node --watch src/app/server.js"

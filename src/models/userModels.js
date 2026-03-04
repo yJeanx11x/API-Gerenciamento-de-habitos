@@ -18,4 +18,4 @@ const User = db.Sequelize.define('Usuarios', {
 
 User.sync({ force: false });
 
-module.exports = User
+module.exports =  User 

@@ -18,7 +18,9 @@ async function criarUsuario(req, res, next) {
         db.create({
             nome: z.data.nome,
             email: z.data.email,
-            password: passwordHash
+            password: passwordHash,
+            habitos: z.data.habitos
+
         })
         return res.status(201).json({ message: 'Usuário criado!' })
 
@@ -41,6 +43,8 @@ async function habitsLogin(req, res, next) {
         if (!usuarioDoDB) {
             return res.status(404).json({ message: 'Usuario não encontrado' })
         }
+
+
         // comparando a senha
         const SenhaUsuario = await bcrypt.compare(password, usuarioDoDB.password)
         if (!SenhaUsuario) {
@@ -70,16 +74,40 @@ async function habitsLogin(req, res, next) {
 async function habitsJwt(req, res, next) {
     try {
         const { id } = req.params
-        const UserDb = await db.findOne({ where: { id }, attributes: { exclude: ['password'] } })
+        const UserDb = await db.findOne({ where: { id }, attributes: { exclude: ['password', 'createdAt', 'updatedAt'] } })
         if (!UserDb) {
             return res.status(404).json({ message: 'Usuário não encontrado' })
         }
+
         return res.status(200).json({ message: 'Usuário encontrado', user: UserDb })
 
     } catch (error) {
         next(error)
     }
-    
+
 }
 
-module.exports = { criarUsuario, habitsLogin, habitsJwt }
+async function atualizarHabitos(req, res, next) {
+    const { id } = req.params
+    const { habitos } = req.body
+
+    try {
+        const verificaUser = await db.findOne({ where: { id } })
+        if (!verificaUser ) {
+        return res.status(400).json({message:'Usuário não encontrado'})
+        }
+
+        verificaUser.update({
+            habitos: habitos
+        })
+        return res.status(200).json({ message: 'Habistos atualizado !' })
+
+    } catch (error) {
+        next(error)
+    }
+
+
+}
+
+
+module.exports = { criarUsuario, habitsLogin, habitsJwt, atualizarHabitos }

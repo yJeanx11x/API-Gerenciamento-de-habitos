@@ -52,6 +52,9 @@ async function habitsLogin(req, res, next) {
             const token = jwt.sign({
                 id: usuarioDoDB._id
             }, secret)
+            if (!token) {
+                return res.status(400).json({ message: 'token invalido' })
+            }
             const userID = usuarioDoDB.id
             return res.status(200).json({ message: 'Login com sucesso', token, userID })
         } catch (error) {
@@ -63,5 +66,6 @@ async function habitsLogin(req, res, next) {
     }
 
 }
+
 
 module.exports = { criarUsuario, habitsLogin }

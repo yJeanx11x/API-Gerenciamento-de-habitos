@@ -65,7 +65,7 @@ src/
  ├── middlewares/
  ├── schemas/
  ├── app.js
- └── server.js
+ 
 ⚙️ Como executar o projeto
 
 Clonar o repositório

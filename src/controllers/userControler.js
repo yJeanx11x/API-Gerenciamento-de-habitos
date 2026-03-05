@@ -51,7 +51,7 @@ async function habitsLogin(req, res, next) {
             const secret = process.env.SECRET
             const token = jwt.sign({
                 id: usuarioDoDB._id
-            }, secret)
+            }, secret, { expiresIn: '1h' })
             if (!token) {
                 return res.status(400).json({ message: 'token invalido' })
             }
@@ -67,5 +67,19 @@ async function habitsLogin(req, res, next) {
 
 }
 
+async function habitsJwt(req, res, next) {
+    try {
+        const { id } = req.params
+        const UserDb = await db.findOne({ where: { id }, attributes: { exclude: ['password'] } })
+        if (!UserDb) {
+            return res.status(404).json({ message: 'Usuário não encontrado' })
+        }
+        return res.status(200).json({ message: 'Usuário encontrado', user: UserDb })
 
-module.exports = { criarUsuario, habitsLogin }
+    } catch (error) {
+        next(error)
+    }
+    
+}
+
+module.exports = { criarUsuario, habitsLogin, habitsJwt }
